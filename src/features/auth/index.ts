@@ -18,4 +18,3 @@ export { authRoutes } from './router/auth.routes';
 // Componentes (solo si se necesitan fuera del feature)
 export { LoginForm } from './components/LoginForm';
 export { LoginHeader } from './components/LoginHeader';
-export { QuickLoginButtons } from './components/QuickLoginButtons';

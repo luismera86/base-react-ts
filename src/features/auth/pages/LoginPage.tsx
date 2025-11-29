@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../store/auth.store';
 import { LoginHeader } from '../components/LoginHeader';
 import { LoginForm } from '../components/LoginForm';
-import { QuickLoginButtons } from '../components/QuickLoginButtons';
 
 export const LoginPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,11 +24,6 @@ export const LoginPage = () => {
     }
   };
 
-  const handleQuickLogin = (userType: 'admin' | 'user' | 'moderator') => {
-    const email = `${userType === 'moderator' ? 'mod' : userType}@micontainer.com`;
-    handleLogin(email, 'password123');
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -41,8 +35,6 @@ export const LoginPage = () => {
           error={error}
           onClearError={clearError}
         />
-        
-        <QuickLoginButtons onQuickLogin={handleQuickLogin} />
       </div>
     </div>
   );
