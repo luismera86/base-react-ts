@@ -1,0 +1,55 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "admin@micontainer.com",
+      "password": "password123",
+      "name": "Luis Admin",
+      "role": "admin",
+      "permissions": [
+        "read:users",
+        "write:users",
+        "delete:users",
+        "read:admin",
+        "write:admin",
+        "read:reports",
+        "write:reports",
+        "manage:roles"
+      ],
+      "avatar": "LA",
+      "isActive": true,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "lastLogin": "2025-11-29T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "email": "user@micontainer.com",
+      "password": "password123",
+      "name": "Usuario Normal",
+      "role": "user",
+      "permissions": ["read:users"],
+      "avatar": "UN",
+      "isActive": true,
+      "createdAt": "2024-01-15T00:00:00.000Z",
+      "lastLogin": "2025-11-29T00:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "email": "mod@micontainer.com",
+      "password": "password123",
+      "name": "Moderador Sistema",
+      "role": "moderator",
+      "permissions": [
+        "read:users",
+        "write:users",
+        "read:reports",
+        "write:reports"
+      ],
+      "avatar": "MS",
+      "isActive": true,
+      "createdAt": "2024-01-10T00:00:00.000Z",
+      "lastLogin": "2025-11-29T00:00:00.000Z"
+    }
+  ],
+  "posts": []
+}

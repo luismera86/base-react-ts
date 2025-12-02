@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { AuthStore, User } from '../types/auth.types';
 import { UserRole } from '../types/auth.types';
-import { authAPI } from '../api/auth.api';
+import { checkAuthService, loginService } from '../services/auth.services';
+
 
 export const useAuthStore = create<AuthStore>()(
   persist(
@@ -19,7 +20,7 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true, error: null });
         
         try {
-          const { user, token } = await authAPI.login(email, password);
+          const { user, token } = await loginService(email, password);
           
           set({
             user: { ...user, lastLogin: new Date() },
@@ -91,7 +92,7 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true });
         
         try {
-          const user = await authAPI.checkAuth(token);
+          const user = await checkAuthService(token);
           set({
             user,
             isAuthenticated: true,
