@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './routes';
-import { useAuth } from '../../features/auth';
+import { useAuth } from '../features/auth';
 
 export const AppRouter = () => {
   const { checkAuth } = useAuth();

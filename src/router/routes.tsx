@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
-import { ProtectedRoute, DashboardLayout, NotFound } from "../../shared";
-import { authRoutes } from "../../features/auth";
-import { dashboardRoutes } from "../../features/dashboard";
-import { adminRoutes } from "../../features/admin";
+import { ProtectedRoute, DashboardLayout, NotFound } from "../shared";
+import { authRoutes } from "../features/auth";
+import { dashboardRoutes } from "../features/dashboard";
+import { adminRoutes } from "../features/admin";
 
 /**
  * Router principal de la aplicación
