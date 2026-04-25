@@ -44,11 +44,18 @@ Antes de escribir cualquier JSX en la nueva feature, revisar qué hay disponible
 
 Con esa lista en mano, identificar qué piezas de la nueva feature pueden cubrirse con componentes existentes y cuáles realmente requieren algo nuevo. Nunca crear un componente que duplique uno ya existente.
 
-Si la feature necesita un componente de shadcn que no está instalado aún, instalarlo:
+Si la feature necesita un componente de shadcn que no está instalado aún:
 
-```bash
-npx shadcn@latest add <componente>
-```
+1. Obtener la documentación y ejemplos antes de usarlo:
+   ```bash
+   npx shadcn@latest docs <componente>
+   ```
+2. Leer los ejemplos que devuelve el comando para entender la API correcta.
+3. Instalarlo:
+   ```bash
+   npx shadcn@latest add <componente>
+   ```
+4. Leer los archivos generados para verificar qué sub-componentes exporta antes de importarlos.
 
 ### 5. Planificar la fragmentación antes de escribir código
 
@@ -96,6 +103,128 @@ Para formularios, preferir `useActionState`:
 const [state, action, isPending] = useActionState(async (_prev, formData) => {
   // lógica de submit
 }, null)
+```
+
+#### Reglas críticas de shadcn/ui
+
+Aplicar siempre al escribir JSX con componentes shadcn/ui:
+
+**Formularios — layout de campos**
+
+Usar `FieldGroup` + `Field` + `FieldLabel`. Nunca `div` + `Label` raw.
+
+```tsx
+// ✅ correcto
+<FieldGroup>
+  <Field>
+    <FieldLabel htmlFor="nombre">Nombre</FieldLabel>
+    <Input id="nombre" name="nombre" />
+  </Field>
+</FieldGroup>
+
+// ❌ incorrecto
+<div className="flex flex-col gap-1.5">
+  <Label htmlFor="nombre">Nombre</Label>
+  <Input id="nombre" name="nombre" />
+</div>
+```
+
+Si `Field` o `FieldGroup` no están instalados: `npx shadcn@latest add @shadcn/field`.
+
+**Formularios — estado de error**
+
+Usar `FieldError` para mensajes de error. Nunca `<p className="text-destructive">`.
+
+```tsx
+// ✅ correcto
+{
+  state.error && <FieldError>{state.error}</FieldError>
+}
+
+// ❌ incorrecto
+{
+  state.error && <p className="text-destructive text-sm">{state.error}</p>
+}
+```
+
+Para errores por campo: `data-invalid` en el `Field`, `aria-invalid` en el `Input`.
+
+```tsx
+<Field data-invalid={!!errors.email}>
+  <FieldLabel htmlFor="email">Email</FieldLabel>
+  <Input aria-invalid={!!errors.email} />
+  <FieldError>{errors.email}</FieldError>
+</Field>
+```
+
+**Button — estado de carga**
+
+`Button` no tiene prop `isLoading`. Componer con `Spinner` + `data-icon` + `disabled`.
+
+```tsx
+// ✅ correcto
+<Button disabled={isPending}>
+  {isPending && <Spinner data-icon="inline-start" />}
+  Guardar
+</Button>
+
+// ❌ incorrecto
+<Button disabled={isPending}>
+  {isPending ? 'Guardando...' : 'Guardar'}
+</Button>
+```
+
+Si `Spinner` no está instalado: `npx shadcn@latest add @shadcn/spinner`.
+
+**Espaciado**
+
+`gap-*` para separar elementos. Nunca `space-y-*` ni `space-x-*`.
+
+```tsx
+// ✅ correcto
+<div className="flex flex-col gap-4">
+
+// ❌ incorrecto
+<div className="space-y-4">
+```
+
+**Dimensiones iguales**
+
+`size-*` cuando ancho = alto. Nunca `w-* h-*` por separado.
+
+```tsx
+// ✅ correcto
+<Avatar className="size-10">
+
+// ❌ incorrecto
+<Avatar className="w-10 h-10">
+```
+
+**Colores**
+
+Solo tokens semánticos (`bg-primary`, `text-muted-foreground`, `text-destructive`, `bg-card`, etc.). Nunca valores crudos de Tailwind (`blue-500`, `green-600`, etc.).
+
+**Íconos dentro de botones**
+
+`data-icon="inline-start"` o `data-icon="inline-end"` en el ícono. Sin clases de tamaño (`size-4`, `w-4 h-4`) — el componente las gestiona.
+
+```tsx
+<Button>
+  <PlusIcon data-icon="inline-start" />
+  Agregar
+</Button>
+```
+
+**Estados de carga con Skeleton**
+
+Para placeholders de carga usar `Skeleton`. Nunca `animate-pulse` manual.
+
+```tsx
+// ✅ correcto
+<Skeleton className="h-4 w-48" />
+
+// ❌ incorrecto
+<div className="animate-pulse bg-muted h-4 w-48 rounded" />
 ```
 
 ### 8. Validaciones del formulario
