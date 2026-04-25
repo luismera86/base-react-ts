@@ -1,42 +1,34 @@
 #!/usr/bin/env node
 
-import { mkdir, writeFile } from 'fs/promises';
-import { join } from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { mkdir, writeFile } from 'fs/promises'
+import { join } from 'path'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 // Obtener el nombre del feature desde los argumentos
-const featureName = process.argv[2];
+const featureName = process.argv[2]
 
 if (!featureName) {
-  console.error('❌ Error: Debes proporcionar un nombre para el feature');
-  console.log('\n📝 Uso: npm run create:feature <nombre>');
-  console.log('Ejemplo: npm run create:feature customer\n');
-  process.exit(1);
+  console.error('❌ Error: Debes proporcionar un nombre para el feature')
+  console.log('\n📝 Uso: npm run create:feature <nombre>')
+  console.log('Ejemplo: npm run create:feature customer\n')
+  process.exit(1)
 }
 
 // Capitalizar primera letra
-const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-const FeatureName = capitalize(featureName);
+const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
+const FeatureName = capitalize(featureName)
 
 // Ruta base del feature
-const featurePath = join(__dirname, '..', 'src', 'features', featureName);
+const featurePath = join(__dirname, '..', 'src', 'features', featureName)
 
-console.log(`\n🚀 Creando feature: ${featureName}...\n`);
+console.log(`\n🚀 Creando feature: ${featureName}...\n`)
 
 // Estructura de carpetas
-const folders = [
-  '',
-  'services',
-  'components',
-  'pages',
-  'router',
-  'store',
-  'types',
-];
+const folders = ['', 'services', 'components', 'pages', 'router', 'store', 'types']
 
 // Plantillas de archivos
 const templates = {
@@ -253,8 +245,6 @@ export const ${featureName}Routes: RouteObject[] = [
 ];
 `,
 
-
-
   'index.ts': `// Public API del feature ${FeatureName}
 
 // Store
@@ -271,46 +261,45 @@ export { ${featureName}Routes } from './router/${featureName}.routes';
 `,
 
   'components/.gitkeep': '',
-};
+}
 
 // Crear estructura
 try {
   // Crear carpetas
   for (const folder of folders) {
-    const folderPath = join(featurePath, folder);
-    await mkdir(folderPath, { recursive: true });
-    console.log(`✅ Carpeta creada: ${featureName}/${folder || '(root)'}`);
+    const folderPath = join(featurePath, folder)
+    await mkdir(folderPath, { recursive: true })
+    console.log(`✅ Carpeta creada: ${featureName}/${folder || '(root)'}`)
   }
 
   // Crear archivos
   for (const [templatePath, content] of Object.entries(templates)) {
     const filePath = join(
       featurePath,
-      templatePath
-        .replace('{{feature}}', featureName)
-        .replace('{{Feature}}', FeatureName)
-    );
-    await writeFile(filePath, content, 'utf-8');
-    console.log(`📄 Archivo creado: ${templatePath.replace('{{feature}}', featureName).replace('{{Feature}}', FeatureName)}`);
+      templatePath.replace('{{feature}}', featureName).replace('{{Feature}}', FeatureName)
+    )
+    await writeFile(filePath, content, 'utf-8')
+    console.log(
+      `📄 Archivo creado: ${templatePath.replace('{{feature}}', featureName).replace('{{Feature}}', FeatureName)}`
+    )
   }
 
-  console.log(`\n✨ Feature "${featureName}" creado exitosamente!\n`);
-  console.log('📋 Estructura generada:');
-  console.log(`   • services/     - Llamadas a API`);
-  console.log(`   • store/        - Zustand store con estado y acciones`);
-  console.log(`   • types/        - TypeScript types e interfaces`);
-  console.log(`   • pages/        - Componentes de página`);
-  console.log(`   • components/   - Componentes del feature`);
-  console.log(`   • router/       - Definición de rutas\n`);
-  console.log('📋 Próximos pasos:');
-  console.log(`   1. Agregar las rutas en src/config/router/routes.tsx:`);
-  console.log(`      import { ${featureName}Routes } from '../../features/${featureName}';`);
-  console.log(`      // Dentro de children: [...${featureName}Routes]`);
-  console.log(`   2. Personalizar los tipos en types/${featureName}.types.ts`);
-  console.log(`   3. Implementar la lógica en pages/${FeatureName}.tsx`);
-  console.log(`   4. Usar el store directamente: use${FeatureName}Store()\n`);
-
+  console.log(`\n✨ Feature "${featureName}" creado exitosamente!\n`)
+  console.log('📋 Estructura generada:')
+  console.log(`   • services/     - Llamadas a API`)
+  console.log(`   • store/        - Zustand store con estado y acciones`)
+  console.log(`   • types/        - TypeScript types e interfaces`)
+  console.log(`   • pages/        - Componentes de página`)
+  console.log(`   • components/   - Componentes del feature`)
+  console.log(`   • router/       - Definición de rutas\n`)
+  console.log('📋 Próximos pasos:')
+  console.log(`   1. Agregar las rutas en src/config/router/routes.tsx:`)
+  console.log(`      import { ${featureName}Routes } from '../../features/${featureName}';`)
+  console.log(`      // Dentro de children: [...${featureName}Routes]`)
+  console.log(`   2. Personalizar los tipos en types/${featureName}.types.ts`)
+  console.log(`   3. Implementar la lógica en pages/${FeatureName}.tsx`)
+  console.log(`   4. Usar el store directamente: use${FeatureName}Store()\n`)
 } catch (error) {
-  console.error('❌ Error al crear el feature:', error);
-  process.exit(1);
+  console.error('❌ Error al crear el feature:', error)
+  process.exit(1)
 }

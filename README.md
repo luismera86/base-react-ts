@@ -5,21 +5,26 @@ Plantilla base para aplicaciones React con TypeScript, siguiendo una arquitectur
 ## 📚 Stack Tecnológico
 
 ### Core
+
 - **React 19.1.1** - Librería principal para construir interfaces de usuario
 - **TypeScript 5.8.3** - Tipado estático para JavaScript
 - **Vite 7.1.2** - Build tool y dev server ultrarrápido
 
 ### Routing & Estado
+
 - **React Router 7.8.2** - Navegación y routing de la aplicación
 - **Zustand 5.0.8** - Gestión de estado global ligera y simple
 
 ### Estilos
+
 - **Tailwind CSS 4.1.13** - Framework CSS utility-first
 
 ### HTTP & Datos
+
 - **Axios 1.13.2** - Cliente HTTP para peticiones a APIs
 
 ### Desarrollo
+
 - **ESLint 9.33.0** - Linting de código
 - **TypeScript ESLint 8.39.1** - Reglas de linting para TypeScript
 
@@ -63,22 +68,26 @@ src/
 ### Características Clave
 
 **1. Separación de Responsabilidades**
+
 - Cada feature es independiente y autocontenido
 - Código compartido centralizado en `shared/`
 - Rutas definidas por feature pero centralizadas en configuración
 
 **2. Gestión de Estado con Zustand**
+
 - Store por feature
 - Persistencia automática con localStorage
 - Selectores para optimización
 
 **3. Protección de Rutas**
+
 - Autenticación requerida
 - Control por roles (admin, moderator, user)
 - Control por permisos específicos
 - Componentes de guard reutilizables
 
 **4. Sistema de Autenticación**
+
 - Token-based (localStorage)
 - Verificación automática al cargar app
 - Interceptors de Axios para tokens
@@ -158,6 +167,7 @@ src/features/customer/
 ### Estructura de Archivos Generados
 
 **1. Services (`services/customer.service.ts`)**
+
 ```typescript
 // Funciones individuales para cada operación
 export const getAllCustomers = async (): Promise<Customer[]> => {...}
@@ -168,6 +178,7 @@ export const deleteCustomer = async (id: string): Promise<void> => {...}
 ```
 
 **2. Store (`store/customer.store.ts`)**
+
 ```typescript
 // Zustand store con todo el estado y acciones
 export const useCustomerStore = create<CustomerStore>((set) => ({
@@ -185,6 +196,7 @@ export const useCustomerStore = create<CustomerStore>((set) => ({
 ```
 
 **3. Types (`types/customer.types.ts`)**
+
 ```typescript
 // Interfaces completas y bien tipadas
 export interface Customer {
@@ -200,6 +212,7 @@ export interface CustomerStore extends CustomerState, CustomerActions {}
 ```
 
 **4. Router (`router/customer.routes.tsx`)**
+
 ```typescript
 // Rutas del feature con protección
 export const customerRoutes: RouteObject[] = [
@@ -243,10 +256,10 @@ Modifica `types/customer.types.ts` según tu entidad:
 
 ```typescript
 export interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
+  id: string
+  name: string
+  email: string
+  phone: string
   // ... tus campos específicos
 }
 ```
@@ -279,11 +292,11 @@ export const Customer = () => {
 
 ```typescript
 // Acceso directo al store
-const { items, isLoading, error, fetchItems, createItem } = useCustomerStore();
+const { items, isLoading, error, fetchItems, createItem } = useCustomerStore()
 
 // O selectores específicos para optimización
-const items = useCustomerStore(state => state.items);
-const isLoading = useCustomerStore(state => state.isLoading);
+const items = useCustomerStore((state) => state.items)
+const isLoading = useCustomerStore((state) => state.isLoading)
 ```
 
 ### Ventajas del Generador
@@ -298,12 +311,14 @@ const isLoading = useCustomerStore(state => state.isLoading);
 ## 🔐 Sistema de Autenticación
 
 ### Roles Disponibles
+
 - `admin` - Acceso total al sistema
 - `moderator` - Permisos de moderación
 - `user` - Usuario estándar
 - `guest` - Usuario invitado (sin autenticar)
 
 ### Permisos
+
 - `read:users`, `write:users`, `delete:users`
 - `read:admin`, `write:admin`
 - `read:reports`, `write:reports`
@@ -343,5 +358,3 @@ VITE_API_URL=http://localhost:3000
 3. **Mantenibilidad** - Código organizado y predecible
 4. **Type Safety** - TypeScript en todo el proyecto
 5. **Developer Experience** - Herramientas para agilizar desarrollo
-
-
