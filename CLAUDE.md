@@ -44,6 +44,51 @@ Usar los hooks nuevos de React 19 en lugar de `useEffect` siempre que sea posibl
 
 `useEffect` solo está justificado para sincronizar con sistemas externos (suscripciones, eventos del DOM, librerías de terceros) o para lógica de inicialización que no encaje en ninguno de los hooks anteriores. Si se usa, documentar brevemente por qué no hay alternativa.
 
+### Hooks de optimización — `useMemo`, `useCallback`, `useRef`
+
+Regla base: no optimizar sin evidencia de problema. Estos hooks son herramientas de corrección antes que de rendimiento.
+
+| Hook          | Usarlo cuando                                                                                          | No usarlo cuando                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------ |
+| `useMemo`     | Cálculo costoso con deps estables; valor que es dep de otro hook                                       | Formateo simple, acceso a store, JSX inline      |
+| `useCallback` | Función pasada a un componente memoizado (`memo()`); función usada como dep de `useEffect` o `useMemo` | Handlers que no son props ni deps de otros hooks |
+| `useRef`      | Valores que no disparan re-render (timers, instancias DOM, valor previo); acceso imperativo al DOM     | Estado que la UI necesita leer — usar `useState` |
+
+Señal de mal uso: si se rodea con `useMemo`/`useCallback` algo que no causa un problema medible, se está añadiendo complejidad sin beneficio.
+
+### `useState` vs `useReducer`
+
+| Situación                                                                                                 | Preferir      |
+| --------------------------------------------------------------------------------------------------------- | ------------- |
+| 1-2 valores independientes                                                                                | `useState`    |
+| 3+ valores que cambian juntos o transiciones tipo máquina de estados (`idle → loading → success → error`) | `useReducer`  |
+| Estado complejo compartido entre componentes o entre rutas                                                | Zustand store |
+
+### Estado compartido — Zustand vs `useContext`
+
+Si el estado cruza más de un componente o necesita persistir entre rutas, va en un Zustand store. `useContext` queda reservado para configuración de árbol estática que no cambia frecuentemente: tema, i18n, feature flags.
+
+### Custom hooks — cuándo extraer y cuándo no
+
+**Extraer a custom hook cuando:**
+
+- La misma combinación de hooks se repite en 2+ componentes
+- Un componente supera ~80 líneas y parte de eso es lógica sin JSX
+- Un hook de React 19 (`useActionState`, `useOptimistic`) envuelve lógica de dominio específica de la feature
+
+**No extraer cuando:**
+
+- Es un único `useState` o `useRef` trivial
+- La lógica solo tiene sentido en ese componente específico
+- Sería un hook de un solo uso que no añade claridad real
+
+**Dónde va:**
+
+- `src/features/<nombre>/hooks/` — lógica de negocio de la feature
+- `src/shared/hooks/` — lógica reutilizable entre features (ej. `useDebounce`, `useLocalStorage`)
+
+**Naming:** nombrar por responsabilidad (`useProductForm`, `useAuthRedirect`), no por los hooks que usa internamente.
+
 ### Validaciones de formularios
 
 Las validaciones del frontend deben ser un espejo exacto de las del backend: mismas reglas, mismos límites, mismos mensajes de error. Nunca relajar ni inventar restricciones en el cliente. Si el backend cambia sus validaciones, el formulario debe actualizarse en el mismo PR.
